@@ -9,29 +9,28 @@ router.addHandler('detail', async ({ request, page, log }) => {
         log.info(`Successfully scraped title: ${title}`, { url: request.loadedUrl });
         const productData = await page.evaluate(async () => {
         const nameProductSelector = ".product-title-container h1";
-        const imageProductSelector =
-            'div[data-testid="product-image-list"] div div  div[aria-roledescription=slide] > div';
-        const ladderPriceSelector =
-            'div[data-testid="ladder-price"] .price-item:first-child span';
-          const rangePriceSelector = 'div[data-testid="range-price"] > span';
-          const packageSizeSelector =
-            'div[data-testid="module-attribute"] div[title="Single package size"] + div';
+        const imageProductSelector = 'div[data-testid="product-image-list"] div div  div[aria-roledescription=slide] > div';
+        const ladderPriceSelector = 'div[data-testid="ladder-price"] .price-item:first-child span';
+        const rangePriceSelector = 'div[data-testid="range-price"] > span';
+        const packageSizeSelector = 'div[data-testid="module-attribute"] div[title="Single package size"] + div';
 
           let price = "N/A";
           const nameProductElement =
             document.querySelector(nameProductSelector);
           
-          const imageElement = document.querySelector(imageProductSelector);
-          let imageUrl = "N/A";
-          if (imageElement) {
+          const imageElements = document.querySelectorAll(imageProductSelector);
+          const uniqueImageUrls = new Set();
+          imageElements.forEach(imageElement => {
             const style = imageElement.style.backgroundImage;
             if (style) {
-              imageUrl = style
+              const imageUrl = style
                 .replace(/^url\("/, "")
                 .replace(/"\)$/, "")
                 .trim();
+              uniqueImageUrls.add(`https:${imageUrl.replace(/_\d+x\d+\.jpg$/, '_960x960q80.jpg')}`);
             }
-          }
+          });
+          const imageUrls = Array.from(uniqueImageUrls);
 
           const ladderPriceElement =
             document.querySelector(ladderPriceSelector);
@@ -52,7 +51,7 @@ router.addHandler('detail', async ({ request, page, log }) => {
             name: nameProductElement
               ? nameProductElement.innerText.trim()
               : "N/A",
-            image: `https:${imageUrl}`,
+            images: imageUrls,
             price: price,
             packageSize: packageSizeElement
               ? packageSizeElement.innerText.trim()

@@ -28,13 +28,24 @@ const crawler = new PuppeteerCrawler({
     requestQueue,
     requestHandler: router,
     launchContext: {
+        useChrome: true,
         launchOptions: {
             args: [
-                '--disable-gpu', 
-                '--no-sandbox', 
+                '--disable-gpu',
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--no-first-run',
+                '--no-zygote',
+                '--single-process',
+                '--disable-infobars',
+                '--window-size=1920,1080',
             ],
         },
     },
+    headless: true,
+    navigationTimeoutSecs: 120,
 });
 
 

@@ -30,10 +30,8 @@ const crawler = new PuppeteerCrawler({
     proxyConfiguration,
     requestQueue,
     requestHandler: router,
-    browserPoolOptions: {
-        puppeteer: puppeteerExtra,
-    },
     launchContext: {
+        launcher: puppeteerExtra,
         useChrome: true,
         launchOptions: {
             args: [

@@ -11,16 +11,16 @@ if (!input) {
 
 const startUrls = input?.startUrls;
 
-log.info(`Processing search: ${startUrls}`);
+log.info(`Processing ${startUrls.length} start URLs`);
 
 const requestQueue = await RequestQueue.open();
 
-await requestQueue.addRequest([
-    {
-        url: startUrls,
-        label: "detail"
-    }
-])
+for (const startUrl of startUrls) {
+    await requestQueue.addRequest({
+        url: startUrl.url,
+        label: 'detail',
+    });
+}
 
 const proxyConfiguration = await Actor.createProxyConfiguration();
 const crawler = new PuppeteerCrawler({

@@ -4,7 +4,7 @@ export const router = createPuppeteerRouter();
 
 router.addHandler('detail', async ({ request, page, log }) => {
     try {
-        await page.waitForSelector('h1', { timeout: 60000 }); // Wait for the main title element
+        await page.waitForSelector('h1', { timeout: 60000 });
         const title = await page.title();
         log.info(`Successfully scraped title: ${title}`, { url: request.loadedUrl });
 

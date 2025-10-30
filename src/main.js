@@ -1,5 +1,7 @@
 import { Actor } from 'apify';
 import { log, PuppeteerCrawler, RequestQueue } from 'crawlee';
+import puppeteerExtra from 'puppeteer-extra';
+import stealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { router } from './routes.js';
 await Actor.init();
 
@@ -23,10 +25,14 @@ for (const startUrl of startUrls) {
 }
 
 const proxyConfiguration = await Actor.createProxyConfiguration();
+puppeteerExtra.use(stealthPlugin());
 const crawler = new PuppeteerCrawler({
     proxyConfiguration,
     requestQueue,
     requestHandler: router,
+    browserPoolOptions: {
+        puppeteer: puppeteerExtra,
+    },
     launchContext: {
         useChrome: true,
         launchOptions: {

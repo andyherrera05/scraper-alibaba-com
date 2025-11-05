@@ -24,7 +24,9 @@ for (const startUrl of startUrls) {
     });
 }
 
-const proxyConfiguration = await Actor.createProxyConfiguration();
+const proxyConfiguration = await Actor.createProxyConfiguration({
+    groups: ['RESIDENTIAL'],
+});
 puppeteerExtra.use(stealthPlugin());
 const crawler = new PuppeteerCrawler({
     proxyConfiguration,
